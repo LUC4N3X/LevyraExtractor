@@ -1,9 +1,19 @@
+def environmentValue = { String name, String fallback ->
+    def value = System.getenv(name)
+    value == null || value.trim().isEmpty() ? fallback : value.trim()
+}
+
+def rootGroupId = environmentValue("GROUP", "com.github.LUC4N3X")
+def rootArtifactId = environmentValue("ARTIFACT", "LevyraExtractor")
+def publicationVersion = environmentValue("VERSION", "v1.0.0-levyra.9")
+def moduleGroupId = "${rootGroupId}.${rootArtifactId}"
+
 allprojects {
     apply plugin: "java-library"
     apply plugin: "maven-publish"
 
-    group = "com.github.LUC4N3X.LevyraExtractor"
-    version = "v1.0.0-levyra.8"
+    project.group = project == rootProject ? rootGroupId : moduleGroupId
+    project.version = publicationVersion
 
     java {
         withSourcesJar()
@@ -48,5 +58,4 @@ allprojects {
 
 dependencies {
     api project(":extractor")
-    implementation project(":timeago-parser")
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.0-levyra.9
+
+- Correct JitPack coordinates for the root artifact and every published submodule.
+- Use JitPack-provided GROUP, ARTIFACT and VERSION values during publication.
+- Remove the duplicate root dependency on timeago-parser.
+- Support direct consumption of the extractor module without the generated aggregate artifact.
+
 ## v1.0.0-levyra.8
 
 - Make Android VR, Safari, and TVHTML5 playback responses independent and resilient.
