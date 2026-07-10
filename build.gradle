@@ -5,7 +5,7 @@ def environmentValue = { String name, String fallback ->
 
 def rootGroupId = environmentValue("GROUP", "com.github.LUC4N3X")
 def rootArtifactId = environmentValue("ARTIFACT", "LevyraExtractor")
-def publicationVersion = environmentValue("VERSION", "v1.0.0-levyra.9")
+def publicationVersion = environmentValue("VERSION", "v1.0.0-levyra.10")
 def moduleGroupId = "${rootGroupId}.${rootArtifactId}"
 
 allprojects {
@@ -58,4 +58,23 @@ allprojects {
 
 dependencies {
     api project(":extractor")
+}
+
+tasks.register("verifyJitPackPublication") {
+    dependsOn subprojects.collect { it.tasks.named("publishToMavenLocal") }
+
+    doLast {
+        def repositoryRoot = new File(System.getProperty("user.home"), ".m2/repository")
+        def groupPath = moduleGroupId.replace('.', File.separatorChar)
+
+        ["extractor", "timeago-parser"].each { moduleName ->
+            def moduleDirectory = new File(repositoryRoot, "${groupPath}/${moduleName}/${publicationVersion}")
+            def pomFile = new File(moduleDirectory, "${moduleName}-${publicationVersion}.pom")
+            def jarFile = new File(moduleDirectory, "${moduleName}-${publicationVersion}.jar")
+
+            if (!pomFile.isFile() || !jarFile.isFile()) {
+                throw new GradleException("Missing JitPack publication for ${moduleGroupId}:${moduleName}:${publicationVersion}")
+            }
+        }
+    }
 }

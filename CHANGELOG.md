@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.0-levyra.10
+
+- Pin the publication fallback version to v1.0.0-levyra.10.
+- Publish every submodule with the JitPack-provided version.
+- Verify that the extractor and timeago-parser POM and JAR files exist in Maven Local.
+- Fail the JitPack build immediately when a required module is not published.
+
 ## v1.0.0-levyra.9
 
 - Correct JitPack coordinates for the root artifact and every published submodule.
