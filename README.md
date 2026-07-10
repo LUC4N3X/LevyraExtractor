@@ -28,8 +28,9 @@ This is an independent downstream project. It is not an official NewPipe, PipePi
 ## Main features
 
 - YouTube audio and video stream resolution
-- Android VR client support
+- Android VR, Safari and TVHTML5 multi-client stream resolution
 - SABR stream discovery
+- Cross-client direct stream aggregation with one batched URL deobfuscation pass
 - Automatic format selection
 - Fast short-lived caching
 - Duplicate request sharing
@@ -45,6 +46,8 @@ Levyra needs an extractor that is fast, predictable and easy to diagnose when up
 LevyraExtractor keeps the proven foundation of its upstream projects while adding a dedicated resolution layer for the Levyra player.
 
 The main goal is simple: make playback more reliable without hiding failures or making the host application harder to maintain.
+
+The current playback path resolves Android VR, Safari and TVHTML5 independently, preserves the CPN generated for each client, merges direct audio, muxed video and video-only formats, and falls back to SABR or HLS only when direct streams are unavailable. A failed client no longer invalidates a valid response returned by another client.
 
 ## Requirements
 
