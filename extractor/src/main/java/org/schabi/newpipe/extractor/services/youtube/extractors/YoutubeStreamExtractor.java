@@ -1769,6 +1769,7 @@ public class YoutubeStreamExtractor extends StreamExtractor {
     // Fetch page
     //////////////////////////////////////////////////////////////////////////*/
 
+    private static final String FORMATS = "formats";
     private static final String ADAPTIVE_FORMATS = "adaptiveFormats";
     private static final String STREAMING_DATA = "streamingData";
     private static final String PLAYER = "player";
@@ -2560,7 +2561,7 @@ public class YoutubeStreamExtractor extends StreamExtractor {
                 || !streamingData.getString("dashManifestUrl", EMPTY_STRING).isEmpty()) {
             return true;
         }
-        for (final String key : Arrays.asList("formats", ADAPTIVE_FORMATS)) {
+        for (final String key : Arrays.asList(FORMATS, ADAPTIVE_FORMATS)) {
             final JsonArray formats = streamingData.getArray(key);
             if (formats == null) {
                 continue;
