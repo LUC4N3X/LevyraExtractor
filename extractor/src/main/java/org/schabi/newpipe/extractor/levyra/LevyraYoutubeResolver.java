@@ -80,6 +80,17 @@ public final class LevyraYoutubeResolver {
         final boolean joined = existing != null;
         final CompletableFuture<LevyraSabrPreflight> future = joined ? existing : created;
         if (!joined) {
+            // Double-check the cache: between reading it above and winning the in-flight
+            // slot, another concurrent request for the same key may have completed and
+            // populated the cache (then removed its own in-flight entry). Without this
+            // re-check a late joiner that just missed the in-flight window would re-fetch.
+            final CacheEntry fresh = preflightCache.get(key);
+            if (fresh != null && fresh.isFresh()) {
+                created.complete(fresh.preflight);
+                inFlight.remove(key, created);
+                return fromPreflight(request, fresh.preflight, startedNs, streamingSupported,
+                        true, false, sponsorBlockFuture.join(), rydFuture.join());
+            }
             try {
                 final LevyraSabrPreflight preflight = preflightFetcher.fetch(request);
                 preflightCache.put(key, new CacheEntry(preflight, System.currentTimeMillis()
